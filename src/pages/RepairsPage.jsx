@@ -3,348 +3,372 @@ import client from "../api/client";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import { useTranslation } from "react-i18next";
+import PageHeader from "../components/PageHeader";
 
 export default function RepairsPage() {
 
-  const { t } = useTranslation();
+    const { t } = useTranslation();
+    const navigate = useNavigate();
 
-  const [repairs, setRepairs] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [page, setPage] = useState(0);
+    const [repairs, setRepairs] = useState([]);
 
-  const navigate = useNavigate();
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
 
-  useEffect(() => {
+    const [status, setStatus] = useState("");
 
-    const timer = setTimeout(() => {
-      setSearch(searchInput);
-    }, 400);
+    const [page, setPage] = useState(0);
 
-    return () => clearTimeout(timer);
+    const [hasNext, setHasNext] = useState(false);
+    const [hasPrevious, setHasPrevious] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
 
-  }, [searchInput]);
+    useEffect(() => {
 
-  useEffect(() => {
-    fetchRepairs();
-  }, [search, status, page]);
+        const timer = setTimeout(() => {
+            setSearch(searchInput);
+            setPage(0);
+        }, 400);
 
-  async function fetchRepairs() {
+        return () => clearTimeout(timer);
 
-    try {
+    }, [searchInput]);
 
-      let response;
+    useEffect(() => {
+        fetchRepairs();
+    }, [search, status, page]);
 
-      if (search) {
+    async function fetchRepairs() {
 
-        response =
-            await client.get(
-                `/repairs/search?query=${search}`
-            );
+        try {
 
-      } else if (status) {
+            let response;
 
-        response =
-            await client.get(
-                `/repairs/status?status=${status}`
-            );
+            if (search) {
 
-      } else {
+                response =
+                    await client.get(
+                        `/repairs/search?query=${search}`
+                    );
 
-        response =
-            await client.get(
-                `/repairs?page=${page}&size=10`
-            );
+                setRepairs(response.data);
+                setHasNext(false);
+                setHasPrevious(false);
+                setTotalPages(1);
 
-      }
+                return;
+            }
 
-      setRepairs(
-          response.data.content || response.data
-      );
+            if (status) {
 
-    } catch (e) {
-      console.error(e);
+                response =
+                    await client.get(
+                        `/repairs/status?status=${status}`
+                    );
+
+                setRepairs(response.data);
+                setHasNext(false);
+                setHasPrevious(false);
+                setTotalPages(1);
+
+                return;
+            }
+
+            response =
+                await client.get(
+                    `/repairs?page=${page}&size=10`
+                );
+
+            setRepairs(response.data.content);
+
+            setHasNext(response.data.hasNext);
+            setHasPrevious(response.data.hasPrevious);
+            setTotalPages(response.data.totalPages);
+
+        } catch (e) {
+            console.error(e);
+        }
     }
-  }
 
-  function getStatusStyle(status) {
+    function getStatusStyle(status) {
 
-    switch (status) {
+        switch (status) {
 
-      case "RECEIVED":
-        return "bg-red-50 text-red-700 border-red-100";
+            case "RECEIVED":
+                return "bg-red-50 text-red-700 border-red-100";
 
-      case "DIAGNOSED":
-        return "bg-purple-50 text-purple-700 border-purple-100";
+            case "DIAGNOSED":
+                return "bg-purple-50 text-purple-700 border-purple-100";
 
-      case "WAITING_PARTS":
-        return "bg-orange-50 text-orange-700 border-orange-100";
+            case "WAITING_PARTS":
+                return "bg-orange-50 text-orange-700 border-orange-100";
 
-      case "IN_REPAIR":
-        return "bg-yellow-50 text-yellow-700 border-yellow-100";
+            case "IN_REPAIR":
+                return "bg-yellow-50 text-yellow-700 border-yellow-100";
 
-      case "READY":
-        return "bg-green-50 text-green-700 border-green-100";
+            case "READY":
+                return "bg-green-50 text-green-700 border-green-100";
 
-      case "DELIVERED":
-        return "bg-blue-50 text-blue-700 border-blue-100";
+            case "DELIVERED":
+                return "bg-blue-50 text-blue-700 border-blue-100";
 
-      default:
-        return "bg-gray-50 text-gray-700 border-gray-100";
+            default:
+                return "bg-gray-50 text-gray-700 border-gray-100";
+        }
     }
-  }
 
-  function getStatusLabel(status) {
+    function getStatusLabel(status) {
 
-    switch (status) {
+        switch (status) {
 
-      case "RECEIVED":
-        return t("received");
+            case "RECEIVED":
+                return t("received");
 
-      case "DIAGNOSED":
-        return t("diagnosed");
+            case "DIAGNOSED":
+                return t("diagnosed");
 
-      case "WAITING_PARTS":
-        return t("waiting_parts");
+            case "WAITING_PARTS":
+                return t("waiting_parts");
 
-      case "IN_REPAIR":
-        return t("in_repair");
+            case "IN_REPAIR":
+                return t("in_repair");
 
-      case "READY":
-        return t("ready");
+            case "READY":
+                return t("ready");
 
-      case "DELIVERED":
-        return t("delivered");
+            case "DELIVERED":
+                return t("delivered");
 
-      default:
-        return status;
+            default:
+                return status;
+        }
     }
-  }
 
-  return (
+    return (
 
-      <div className="min-h-screen bg-gray-50 pb-32">
+        <div className="min-h-screen bg-gray-50 pb-32">
 
-        <div className="max-w-5xl mx-auto px-4 py-6">
+            <div className="max-w-5xl mx-auto px-4 py-6">
 
-          {/* HEADER */}
+                <PageHeader
+                    title={t("repairs")}
+                    description={t("repair_page_description")}
+                />
 
-          <div className="mb-6">
+                {/* FILTERS */}
 
-            <h1 className="text-2xl font-bold text-gray-900">
-              {t("repairs")}
-            </h1>
+                <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-5 space-y-3">
 
-            <p className="text-sm text-gray-500 mt-1">
-              مدیریت تعمیرات ثبت شده
-            </p>
+                    <input
+                        type="text"
+                        placeholder={t("search_repairs")}
+                        value={searchInput}
+                        onChange={(e) =>
+                            setSearchInput(e.target.value)
+                        }
+                        className="
+                            w-full
+                            p-3
+                            rounded-xl
+                            border
+                            border-gray-200
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-indigo-200
+                        "
+                    />
 
-          </div>
-
-          {/* FILTERS */}
-
-          <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-5 space-y-3">
-
-            <input
-                type="text"
-                placeholder={t("search_repairs")}
-                value={searchInput}
-                onChange={(e) =>
-                    setSearchInput(e.target.value)
-                }
-                className="
-              w-full
-              p-3
-              rounded-xl
-              border
-              border-gray-200
-              focus:outline-none
-              focus:ring-2
-              focus:ring-indigo-200
-            "
-            />
-
-            <select
-                value={status}
-                onChange={(e) =>
-                    setStatus(e.target.value)
-                }
-                className="
-              w-full
-              p-3
-              rounded-xl
-              border
-              border-gray-200
-            "
-            >
-
-              <option value="">
-                {t("all_statuses")}
-              </option>
-
-              <option value="RECEIVED">
-                {t("received")}
-              </option>
-
-              <option value="DIAGNOSED">
-                {t("diagnosed")}
-              </option>
-
-              <option value="WAITING_PARTS">
-                {t("waiting_parts")}
-              </option>
-
-              <option value="IN_REPAIR">
-                {t("in_repair")}
-              </option>
-
-              <option value="READY">
-                {t("ready")}
-              </option>
-
-              <option value="DELIVERED">
-                {t("delivered")}
-              </option>
-
-            </select>
-
-          </div>
-
-          {/* LIST */}
-
-          <div className="space-y-3">
-
-            {repairs.map((repair) => (
-
-                <div
-                    key={repair.id}
-                    onClick={() =>
-                        navigate(`/repairs/${repair.id}`)
-                    }
-                    className="
-                bg-white
-                rounded-2xl
-                p-4
-                border
-                border-gray-100
-                shadow-sm
-                cursor-pointer
-                hover:shadow-md
-                transition
-              "
-                >
-
-                  <div className="flex justify-between items-start">
-
-                    <div>
-
-                      <h2 className="font-semibold text-gray-900">
-                        {repair.deviceModel}
-                      </h2>
-
-                      <p className="text-sm text-gray-500 mt-1">
-                        {repair.customer?.name}
-                      </p>
-
-                    </div>
-
-                    <span
-                        className={`
-                    text-xs
-                    px-3
-                    py-1
-                    rounded-full
-                    border
-                    font-medium
-                    ${getStatusStyle(repair.status)}
-                  `}
+                    <select
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                            setPage(0);
+                        }}
+                        className="
+                            w-full
+                            p-3
+                            rounded-xl
+                            border
+                            border-gray-200
+                        "
                     >
-                  {getStatusLabel(repair.status)}
-                </span>
+                        <option value="">
+                            {t("all_statuses")}
+                        </option>
 
-                  </div>
+                        <option value="RECEIVED">
+                            {t("received")}
+                        </option>
 
-                  <p className="text-gray-400 text-sm mt-3 line-clamp-2">
-                    {repair.problemDescription}
-                  </p>
+                        <option value="DIAGNOSED">
+                            {t("diagnosed")}
+                        </option>
+
+                        <option value="WAITING_PARTS">
+                            {t("waiting_parts")}
+                        </option>
+
+                        <option value="IN_REPAIR">
+                            {t("in_repair")}
+                        </option>
+
+                        <option value="READY">
+                            {t("ready")}
+                        </option>
+
+                        <option value="DELIVERED">
+                            {t("delivered")}
+                        </option>
+                    </select>
 
                 </div>
 
-            ))}
+                {/* LIST */}
 
-          </div>
+                <div className="space-y-3">
 
-          {/* PAGINATION */}
+                    {repairs.length === 0 && (
 
-          {!search && !status && (
+                        <div className="bg-white rounded-2xl p-8 text-center text-gray-500 border">
+                            {t("no_repairs_found")}
+                        </div>
 
-              <div className="flex justify-between items-center mt-6">
+                    )}
 
-                <button
-                    onClick={() =>
-                        setPage((p) => Math.max(p - 1, 0))
-                    }
-                    className="
-                bg-white
-                border
-                px-4
-                py-2
-                rounded-xl
-              "
-                >
-                  {t("previous")}
-                </button>
+                    {repairs.map((repair) => (
 
-                <span className="text-sm text-gray-500">
-              صفحه {page + 1}
-            </span>
+                        <div
+                            key={repair.id}
+                            onClick={() =>
+                                navigate(`/repairs/${repair.id}`)
+                            }
+                            className="
+                                bg-white
+                                rounded-2xl
+                                p-4
+                                border
+                                border-gray-100
+                                shadow-sm
+                                cursor-pointer
+                                hover:shadow-md
+                                transition
+                            "
+                        >
 
-                <button
-                    onClick={() =>
-                        setPage((p) => p + 1)
-                    }
-                    className="
-                bg-white
-                border
-                px-4
-                py-2
-                rounded-xl
-              "
-                >
-                  {t("next")}
-                </button>
+                            <div className="flex justify-between items-start">
 
-              </div>
+                                <div>
 
-          )}
+                                    <h2 className="font-semibold text-gray-900">
+                                        {repair.deviceModel}
+                                    </h2>
+
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        {repair.customer?.name}
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    className={`
+                                        text-xs
+                                        px-3
+                                        py-1
+                                        rounded-full
+                                        border
+                                        font-medium
+                                        ${getStatusStyle(repair.status)}
+                                    `}
+                                >
+                                    {getStatusLabel(repair.status)}
+                                </span>
+
+                            </div>
+
+                            <p className="text-gray-400 text-sm mt-3 line-clamp-2">
+                                {repair.problemDescription}
+                            </p>
+
+                        </div>
+
+                    ))}
+
+                </div>
+
+                {/* PAGINATION */}
+
+                {!search && !status && totalPages > 0 && (
+
+                    <div className="flex justify-between items-center mt-6">
+
+                        <button
+                            disabled={!hasPrevious}
+                            onClick={() =>
+                                setPage((p) => Math.max(p - 1, 0))
+                            }
+                            className={`
+                                px-4 py-2 rounded-xl border transition
+                                ${
+                                hasPrevious
+                                    ? "bg-white hover:bg-gray-50"
+                                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            }
+                            `}
+                        >
+                            {t("previous")}
+                        </button>
+
+                        <span className="text-sm text-gray-500">
+                            {t("page")} {page + 1} / {totalPages}
+                        </span>
+
+                        <button
+                            disabled={!hasNext}
+                            onClick={() =>
+                                setPage((p) => p + 1)
+                            }
+                            className={`
+                                px-4 py-2 rounded-xl border transition
+                                ${
+                                hasNext
+                                    ? "bg-white hover:bg-gray-50"
+                                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            }
+                            `}
+                        >
+                            {t("next")}
+                        </button>
+
+                    </div>
+
+                )}
+
+            </div>
+
+            {/* FAB */}
+
+            <button
+                onClick={() => navigate("/create")}
+                className="
+                    fixed
+                    bottom-24
+                    left-6
+                    w-14
+                    h-14
+                    rounded-full
+                    bg-indigo-600
+                    hover:bg-indigo-700
+                    text-white
+                    text-2xl
+                    shadow-lg
+                    transition
+                "
+            >
+                +
+            </button>
+
+            <BottomNav />
 
         </div>
-
-        {/* FLOATING ACTION BUTTON */}
-
-        <button
-            onClick={() => navigate("/create")}
-            className="
-          fixed
-          bottom-24
-          left-6
-          w-14
-          h-14
-          rounded-full
-          bg-indigo-600
-          hover:bg-indigo-700
-          text-white
-          text-2xl
-          shadow-lg
-          transition
-        "
-        >
-          +
-        </button>
-
-        <BottomNav />
-
-      </div>
-  );
+    );
 }

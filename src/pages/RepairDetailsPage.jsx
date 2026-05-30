@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import client from "../api/client";
 import { useTranslation } from "react-i18next";
+import PageHeader from "../components/PageHeader.jsx";
 
 export default function RepairDetailsPage() {
 
@@ -116,7 +117,11 @@ export default function RepairDetailsPage() {
             <div className="max-w-4xl mx-auto p-4 space-y-5">
 
                 {/* HEADER */}
-
+                <PageHeader
+                    title={t("repair_details")}
+                    description={t("repair_details_description")}
+                    showBack={true}
+                />
                 <div className="card p-6">
 
                     <h1 className="text-2xl font-bold">

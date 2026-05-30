@@ -3,6 +3,7 @@ import client from "../api/client";
 
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher.jsx";
 
 export default function LoginPage() {
 
@@ -51,19 +52,10 @@ export default function LoginPage() {
                 </h1>
 
                 <div className="flex justify-end gap-2 mb-4">
-                    <button
-                        onClick={() => i18n.changeLanguage("fa")}
-                        className="text-xs bg-gray-200 px-3 py-1 rounded-lg"
-                    >
-                        فارسی
-                    </button>
 
-                    <button
-                        onClick={() => i18n.changeLanguage("en")}
-                        className="text-xs bg-gray-200 px-3 py-1 rounded-lg"
-                    >
-                        English
-                    </button>
+                    {/* LANGUAGE SWITCHER */}
+                    <LanguageSwitcher />
+
                 </div>
 
                 <div className="space-y-4">

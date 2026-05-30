@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import client from "../api/client";
 import BottomNav from "../components/BottomNav";
 import { useTranslation } from "react-i18next";
-
+import LanguageSwitcher from "../components/LanguageSwitcher";
+import LogoutButton  from "../components/LogoutButton.jsx";
+import PageHeader from "../components/PageHeader.jsx";
 export default function CustomersPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -28,32 +30,12 @@ export default function CustomersPage() {
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
           {/* HEADER */}
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {t("customers")}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Manage your customer base
-              </p>
-            </div>
 
-            <div className="flex gap-2">
-              <button
-                  onClick={() => i18n.changeLanguage("fa")}
-                  className="text-xs bg-white border px-3 py-1 rounded-lg hover:bg-gray-50"
-              >
-                فارسی
-              </button>
+          <PageHeader
+              title={t("customers")}
+              description={t("customers_description")}
 
-              <button
-                  onClick={() => i18n.changeLanguage("en")}
-                  className="text-xs bg-white border px-3 py-1 rounded-lg hover:bg-gray-50"
-              >
-                EN
-              </button>
-            </div>
-          </div>
+          />
 
           {/* LIST CARD */}
           <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-4">

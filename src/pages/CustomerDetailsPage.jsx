@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import client from "../api/client";
+import PageHeader from "../components/PageHeader.jsx";
+import {useTranslation} from "react-i18next";
 
 export default function CustomerDetailsPage() {
+    const { t, i18n } = useTranslation();
     const { id } = useParams();
     const [data, setData] = useState(null);
 
@@ -30,7 +33,11 @@ export default function CustomerDetailsPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-
+                <PageHeader
+                    title={t("customers_details")}
+                    description={t("customers_details_description")}
+                    showBack={true}
+                />
                 {/* HEADER */}
                 <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
                     <h1 className="text-2xl font-bold text-gray-900">
