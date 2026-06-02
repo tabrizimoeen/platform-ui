@@ -3,8 +3,10 @@ import client from "../api/client";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BottomNav from "../components/BottomNav.jsx";
-import LanguageSwitcher from "../components/LanguageSwitcher.jsx";
 import PageHeader from "../components/PageHeader.jsx";
+import toast from "react-hot-toast";
+import { toastError } from "../utils/toastError";
+
 
 export default function CreateRepairPage() {
     const navigate = useNavigate();
@@ -49,7 +51,7 @@ export default function CreateRepairPage() {
             setCustomers(res.data);
             setShowDropdown(true);
         } catch (e) {
-            console.error(e);
+            toastError(e);
         }
     }
 
@@ -74,12 +76,12 @@ export default function CreateRepairPage() {
 
     async function submit() {
         if (!customerQuery.trim()) {
-            alert(t("customer_required"));
+            toast.error(t("customer_required"));
             return;
         }
 
         if (!form.deviceModel.trim()) {
-            alert(t("device_required"));
+            toast.error(t("device_required"));
             return;
         }
 
@@ -100,7 +102,7 @@ export default function CreateRepairPage() {
             const res = await client.post("/repairs/smart-create", payload);
             navigate(`/repairs/${res.data.id}`);
         } catch (e) {
-            console.error(e);
+            toastError(e);
         } finally {
             setLoading(false);
         }

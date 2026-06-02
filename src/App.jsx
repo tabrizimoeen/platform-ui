@@ -4,6 +4,8 @@ import {
     Route,
 } from "react-router-dom";
 
+import { Toaster } from "react-hot-toast";
+
 import RepairsPage from "./pages/RepairsPage";
 import CreateRepairPage from "./pages/CreateRepairPage";
 import RepairDetailsPage from "./pages/RepairDetailsPage";
@@ -19,36 +21,50 @@ import CustomerDetailsPage from "./pages/CustomerDetailsPage.jsx";
 export default function App() {
 
     return (
-
         <BrowserRouter>
 
+            <Toaster
+                position="top-center"
+                toastOptions={{
+                    duration: 4000,
+                }}
+            />
+
             <Routes>
+
                 <Route
                     path="/track/:id"
-                    element={<TrackingPage/>}
+                    element={<TrackingPage />}
                 />
+
                 <Route
                     path="/customers/:id"
-                    element={<ProtectedRoute><CustomerDetailsPage/> </ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <CustomerDetailsPage />
+                        </ProtectedRoute>
+                    }
                 />
+
                 <Route
                     path="/repairs/:id/invoice"
                     element={
                         <ProtectedRoute>
-                            <InvoicePage/>
+                            <InvoicePage />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/login"
-                    element={<LoginPage/>}
+                    element={<LoginPage />}
                 />
 
                 <Route
                     path="/dashboard"
                     element={
                         <ProtectedRoute>
-                            <DashboardPage/>
+                            <DashboardPage />
                         </ProtectedRoute>
                     }
                 />
@@ -57,35 +73,40 @@ export default function App() {
                     path="/customers"
                     element={
                         <ProtectedRoute>
-                            <CustomersPage/>
+                            <CustomersPage />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/repairs/:id"
                     element={
                         <ProtectedRoute>
-                            <RepairDetailsPage/>
+                            <RepairDetailsPage />
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/"
                     element={
                         <ProtectedRoute>
-                            <RepairsPage/>
+                            <RepairsPage />
                         </ProtectedRoute>
                     }
                 />
 
                 <Route
                     path="/create"
-                    element={<ProtectedRoute> <CreateRepairPage/> </ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <CreateRepairPage />
+                        </ProtectedRoute>
+                    }
                 />
 
             </Routes>
 
         </BrowserRouter>
-
     );
 }

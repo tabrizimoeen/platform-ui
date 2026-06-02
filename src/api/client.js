@@ -1,32 +1,43 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: "http://localhost:8080/api",
+    baseURL: "http://localhost:8080/api",
 });
 
 client.interceptors.request.use((config) => {
 
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
+    return config;
 });
 
 client.interceptors.response.use(
-    response => response,
-    error => {
+    (response) => response,
 
-      if (error.response?.status === 401) {
+    (error) => {
 
-        localStorage.removeItem("token");
+        const status = error.response?.status;
 
-        window.location.href = "/login";
-      }
+        if (status === 401) {
 
-      return Promise.reject(error);
+            localStorage.removeItem("token");
+
+            window.location.href = "/login";
+        }
+
+        if (status === 403) {
+            console.error("Access denied");
+        }
+
+        if (status === 500) {
+            console.error("Server error");
+        }
+
+        return Promise.reject(error);
     }
 );
 

@@ -1,5 +1,6 @@
 {
   "repairs": "Repairs",
+  "create_invoice": "create invoice",
   "search_repairs": "Search repairs...",
   "all_statuses": "All Statuses",
   "customers": "Customers",
@@ -30,6 +31,8 @@
   "password": "Password",
   "login_failed": "Login failed",
   "invoice": "Create Invoice",
+  "invoice_description": "Invoice management",
+  "amount": "amount",
   "today": "ُToday",
   "dashboard_description": "Overview of your repair business performance",
   "today_revenue": "Today Revenue",
@@ -49,6 +52,13 @@
   "customers_details_description": "Manage Customer Details Dnd Repair History",
   "repair_details": "Repair Details",
   "repair_details_description": "Repair Flow Management",
-  "page": "page"
+  "page": "page",
+  "no_repairs_found": "no repair found",
+  "pay_invoice": "pay invoice",
+  "paid_success": "paid successfully",
+  "status": "status",
+  "date": "date",
+  "paid": "paid",
+  "unpaid": "unpaid"
 
 }

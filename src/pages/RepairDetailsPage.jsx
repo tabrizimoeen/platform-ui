@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import client from "../api/client";
 import { useTranslation } from "react-i18next";
 import PageHeader from "../components/PageHeader.jsx";
+import toast from "react-hot-toast";
+import { toastError } from "../utils/toastError";
 
 export default function RepairDetailsPage() {
 
@@ -56,7 +58,7 @@ export default function RepairDetailsPage() {
             setLogs(logRes.data);
 
         } catch (e) {
-            console.error(e);
+            toastError(e);
         } finally {
             setLoading(false);
         }
@@ -73,7 +75,7 @@ export default function RepairDetailsPage() {
             await fetchRepair();
 
         } catch (e) {
-            console.error(e);
+            toastError(e);
         }
     }
 
@@ -215,16 +217,21 @@ export default function RepairDetailsPage() {
 
                         )}
 
-                        <button
-                            onClick={() =>
-                                navigate(`/repairs/${id}/invoice`)
-                            }
-                            className="btn-primary w-full"
-                        >
-                            {repair.finalCost
-                                ? "مشاهده فاکتور"
-                                : "صدور فاکتور"}
-                        </button>
+                        {(repair.status === "READY" ||
+                            repair.status === "DELIVERED") && (
+
+                            <button
+                                onClick={() =>
+                                    navigate(`/repairs/${id}/invoice`)
+                                }
+                                className="btn-primary w-full"
+                            >
+                                {repair.invoice
+                                    ? "مشاهده فاکتور"
+                                    : "صدور فاکتور"}
+                            </button>
+
+                        )}
 
                     </div>
 

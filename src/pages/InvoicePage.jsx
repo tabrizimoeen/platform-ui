@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import client from "../api/client";
 import { useTranslation } from "react-i18next";
+import PageHeader from "../components/PageHeader.jsx";
 
 export default function InvoicePage() {
   const { id } = useParams();
@@ -63,14 +64,12 @@ export default function InvoicePage() {
         <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
 
           {/* HEADER */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {t("invoice")}
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage repair billing and payment
-            </p>
-          </div>
+          <PageHeader
+              title={t("invoice")}
+              description={t("invoice_description")}
+              showBack={true}
+          />
+
 
           {/* MAIN CARD */}
           <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 space-y-5">
@@ -136,7 +135,7 @@ export default function InvoicePage() {
 
                     <div className="flex justify-between">
                   <span className="text-gray-500 text-sm">
-                    Date
+                    {t("date")}
                   </span>
 
                       <span className="text-sm text-gray-700">
@@ -165,13 +164,13 @@ export default function InvoicePage() {
 
           </div>
 
-          {/* BACK BUTTON */}
-          <button
-              onClick={() => navigate(-1)}
-              className="w-full bg-white border border-gray-200 p-3 rounded-xl hover:bg-gray-50"
-          >
-            {t("back")}
-          </button>
+          {/*/!* BACK BUTTON *!/*/}
+          {/*<button*/}
+          {/*    onClick={() => navigate(-1)}*/}
+          {/*    className="w-full bg-white border border-gray-200 p-3 rounded-xl hover:bg-gray-50"*/}
+          {/*>*/}
+          {/*  {t("back")}*/}
+          {/*</button>*/}
 
         </div>
       </div>

@@ -2,8 +2,7 @@ import {useEffect, useState} from "react";
 import client from "../api/client";
 import {useTranslation} from "react-i18next";
 import BottomNav from "../components/BottomNav.jsx";
-import LanguageSwitcher from "../components/LanguageSwitcher.jsx";
-import LogoutButton  from "../components/LogoutButton.jsx";
+
 
 
 import {

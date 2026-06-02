@@ -1,5 +1,6 @@
 {
   "repairs": "تعمیرات",
+  "create_invoice": "ثبت فاکتور",
   "search_repairs": "جستجوی تعمیرات...",
   "all_statuses": "همه وضعیت‌ها",
   "current_status": "وضعیت فعلی",
@@ -33,6 +34,8 @@
   "password": "رمز عبور",
   "login_failed": "ورود ناموفق بود",
   "invoice": "ایجاد فاکتور",
+  "invoice_description": "ثبت فاکتور جدید",
+  "amount": "مبلغ",
   "today": "امروز",
   "total": "کل",
   "unpaid": "پرداخت نشده",
@@ -50,5 +53,12 @@
   "customers_details_description": "مشاهده و مدیریت سوابق مشتری",
   "repair_details": "جزییات تعمیرات",
   "repair_details_description": "مدیریت و پیگیری  وضعیت تعمیرات",
-  "page": "صفحه"
+  "page": "صفحه",
+  "no_repairs_found": "تعمیراتی یافت نشد",
+  "pay_invoice": "پرداخت فاکتور",
+  "paid_success": "پرداخت موفق",
+  "status": "وضعیت",
+  "date": "تاریخ",
+  "paid": "پرداخت شده",
+  "unpaid": "پرداخت نشده"
 }
